@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Game</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script defer type="module" src="./main.js"></script>
+</head>
+
+<body>
+    <div class="opponent">
+        <div id="opponent__hand">
+
+            <section class="card card--back" value="">
+                <div class="card__inner card__inner--centered">
+                    <div class="card__column">
+                        <div class="card__symbol"></div>
+                        <div class="card__symbol"></div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+
+    <div class="table">
+        <div class="table__deck">
+            <ul class="deck"></ul>
+        </div>
+
+        <div class="table__stack">
+            <section class="card card--heart" name="7" value=7>
+                <div class="card__inner card__inner--centered">
+                    <div class="card__column">
+                        <div class="card__symbol"></div>
+                        <div class="card__symbol"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <button id="burn-card">burn</button>
+
+        <div class="table__burn">
+
+        </div>
+    </div>
+
+    <div class="user">
+        <div class="user__hand"></div>
+        </div>
+        <button id="compare">compare cards</button>
+        <button id="give-card">Give card</button>
+        <button id="remove">remove</button>
+    </div>
+</body>
+
+</html>

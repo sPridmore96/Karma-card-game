@@ -1,0 +1,161 @@
+@charset "UTF-8";
+.cards {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.card {
+  position: relative;
+  display: inline-block;
+  width: 5rem;
+  height: 8rem;
+  font: 16px "Trebuchet MS";
+  margin: 10px;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+}
+.card:before, .card:after {
+  content: attr(value);
+  position: absolute;
+  width: 12px;
+  text-align: center;
+  letter-spacing: -2px;
+}
+.card:before {
+  top: 4px;
+  left: 4px;
+}
+.card:after {
+  bottom: 4px;
+  right: 4px;
+  transform: rotate(180deg);
+}
+.card--heart {
+  color: #e44145;
+}
+.card--heart:before, .card--heart:after {
+  content: attr(name) " ♥";
+}
+.card--spade {
+  color: #252525;
+}
+.card--spade:before, .card--spade:after {
+  content: attr(name) " ♠";
+}
+.card--diamond {
+  color: #e44145;
+}
+.card--diamond:before, .card--diamond:after {
+  content: attr(name) " ◆";
+}
+.card--club {
+  color: #252525;
+}
+.card--club:before, .card--club:after {
+  content: attr(name) " ♣";
+}
+.card--back {
+  background: rgb(255, 253, 254);
+  background: radial-gradient(circle, rgb(255, 253, 254) 0%, rgb(40, 151, 223) 100%);
+}
+
+.card__inner {
+  box-sizing: border-box;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+}
+.card__inner--centered {
+  justify-content: center;
+}
+
+.card__column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card__column--centered {
+  justify-content: center;
+}
+
+.card__symbol {
+  display: inline-block;
+  height: 40px;
+  text-align: center;
+}
+.card__symbol:before {
+  font-size: 40px;
+  line-height: 40px;
+}
+.card--heart .card__symbol:before {
+  content: "♥";
+}
+.card--spade .card__symbol:before {
+  content: "♠";
+}
+.card--diamond .card__symbol:before {
+  content: "◆";
+}
+.card--club .card__symbol:before {
+  content: "♣";
+}
+.card__symbol--big {
+  flex-basis: 2rem;
+}
+.card__symbol--huge {
+  flex-basis: 3.6rem;
+}
+
+.title {
+  font: 18px "Trebuchet MS";
+  color: #444;
+  text-align: center;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 99vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.table {
+  flex-wrap: wrap;
+  background-color: red;
+  height: 25vh;
+  width: 75vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10rem;
+  margin: 1rem 0 1rem 0;
+}
+
+.opponent {
+  background-color: grey;
+  display: flex;
+  justify-content: center;
+  width: 90vw;
+}
+
+.user {
+  background-color: grey;
+  display: flex;
+  justify-content: center;
+  height: 30vh;
+  width: 90vw;
+}/*# sourceMappingURL=styles.css.map */

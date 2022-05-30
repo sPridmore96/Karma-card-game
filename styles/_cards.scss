@@ -1,0 +1,144 @@
+@use "./variables.scss" as *;
+
+.cards {
+	text-align: center;
+	max-width: 640px;
+	margin: 0 auto;
+}
+
+.card {
+
+	position: relative;
+	display: inline-block;
+	width: $card-width;
+	height: $card-height;
+	font: $font-size 'Trebuchet MS';
+	
+	margin: $gutter;
+	border-radius: $card-padding;
+	background: $card-background;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+	
+	&:before,
+	&:after {
+		content: attr(value);
+		position: absolute;
+		width: 12px;
+		text-align: center;
+		letter-spacing: -2px;
+	}
+	
+	&:before {
+		top: $card-padding;
+		left: $card-padding;
+	}
+	
+	&:after {
+		bottom: $card-padding;
+		right: $card-padding;
+		transform: rotate(180deg)
+	}
+	
+	&--heart {
+		color: $card-color-red;
+		
+		&:before,
+		&:after {
+			content: attr(name) ' ♥';
+		}
+	}
+	
+	&--spade {
+		color: $card-color-black;
+		
+		&:before,
+		&:after {
+			content: attr(name) ' ♠';
+		}
+	}
+	&--diamond {
+		color: $card-color-red;
+		
+		&:before,
+		&:after {
+			content: attr(name) ' ◆';
+		}
+	}
+	&--club {
+		color: $card-color-black;
+		
+		&:before,
+		&:after {
+			content: attr(name) ' \2663';
+		}
+	}
+	&--back {
+		background: rgb(255,253,254);
+	background: radial-gradient(circle, rgba(255,253,254,1) 0%, rgba(40,151,223,1) 100%);
+	}
+		
+}
+
+.card__inner {
+	box-sizing: border-box;
+	position: absolute;
+	display: flex;
+	justify-content: space-between;
+	top: 6 * $card-padding;
+	left: 6 * $card-padding;
+	right: 6 * $card-padding;
+	bottom: 6 * $card-padding;
+	
+	&--centered {
+		justify-content: center;
+	}
+}
+
+.card__column {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	
+	&--centered {
+		justify-content: center;
+	}
+}
+
+.card__symbol {
+	display: inline-block;
+	height: $card-symbol-size;
+	text-align: center;
+	
+	&:before {
+		font-size: $card-symbol-size;
+		line-height: $card-symbol-size;
+	}
+	
+	.card--heart &:before {
+		content: '♥';
+	}
+	.card--spade &:before {
+		content: '♠';
+	}
+	.card--diamond &:before {
+		content: "◆";
+	}
+	.card--club &:before {
+		content: "\2663";
+	}
+	
+	
+	&--big {
+		flex-basis: 0.25 * $card-height;
+	}
+	
+	&--huge {
+		flex-basis: 0.45 * $card-height;
+	}
+}
+
+.title {
+	font: 18px 'Trebuchet MS';
+	color: #444;
+	text-align: center;
+}
