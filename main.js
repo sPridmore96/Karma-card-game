@@ -11,6 +11,7 @@ let userCardObj = {}
 let userHandArr = []
 let opponentHandArr = []
 let removedCardObj = {}
+let htmlFoundCard = []
 
 
 
@@ -45,27 +46,12 @@ const startGame = () => {
 }
 startGame()
 
-
-const compareCardValues = (valueOne, valueTwo) => {
-    let highest = 0
-    valueOne > valueTwo ? highest = valueOne : highest = valueTwo
-    return highest;
-}
-
-
 // --------------- moving cards to be used
 
-const giveStackCard = (playersCard) => {
-    givenCard = playersCard.innerHTML
+const removeFromDeck = (deck) => {
+    return deck.pop()
 }
 
-const giveUserCard = (event) => {
-    let userCard = ''
-    event = event.target;
-    const removedCardObj = removeFromDeck(shuffledDeckArr)
-    addCardToPlayerArr(userHandArr, removedCardObj)
-    return userHand, userHandArr
-}
 
 const addCardToPlayerArr = (playerArr, givinCard) => {
     playerArr = playerArr.push(givinCard)
@@ -77,9 +63,7 @@ const makePlayerHand = (playerHandArr) => {
         removedCardObj = removeFromDeck(shuffledDeckArr)
         addCardToPlayerArr(userHandArr, removedCardObj)
         userHandArr.forEach(obj => {
-        createCardInfo(obj)
-        
-
+            createCardInfo(obj)
         })
     }
     makeHTMLForHand(userHandArr, usersHandHTML)
@@ -91,77 +75,89 @@ const makeHTMLForHand = (playerHandArr, htmlElement) => {
     })
 }
 
-const addClickEvent = () => {
-    const cardHTMLElement = document.querySelector(".select")
-      cardHTMLElement.addEventListener('click', handlePlayerSelectCard)
-}
-
-const handlePlayerSelectCard = () => {
-    console.log("yeah");
-}
-
-const removedCardFromPlayer = () => {
-
-}
-
-const removeCardHTML = (givenObj, htmlElement) => {
-
-}
-
-const removedCardFromPlayerArr = (playerArr, indexFrom, amount) => {
-    playerArr = userHandArr.splice(indexFrom, amount)
-    return playerArr;
-}
-
-
-
-
-
-
-
-
-const removeFromDeck = (deck) => {
-    return deck.pop()
-}
-
 const createCardInfo = (givenObj) => {
     let cardInfo =
-        ` <section class="card select card--${givenObj.suit}" name="${givenObj.name}" value = ${givenObj.value}>
-    <div class="card__inner card__inner--centered">
-        <div class="card__column">
-            <div class="card__symbol"></div>
-            <div class="card__symbol"></div>
-        </div>
-    </div>
-</section>`
+        `<section class="card select card--${givenObj.suit}" name="${givenObj.name}" value = ${givenObj.value}>
+            <div class="card__inner card__inner--centered">
+                <div class="card__column">
+                    <div class="card__symbol"></div>
+                    <div class="card__symbol"></div>
+                </div>
+            </div>
+        </section>`
     givenObj["card info"] = cardInfo
     return givenObj
 
 }
 
-const makeCardHTML = (givenCardInfo, htmlElement) => {
-    htmlElement.innerHTML += givenCardInfo
+const loopThroughHandArr = (playerHandArr) => {
+    let collectedInfo = []
+    playerHandArr.forEach(card => {
+        collectedInfo.push(card["card info"])
+
+    })
+    return collectedInfo
 }
 
 
-// ------------- Adding to burn deck
-const cardToBurnFromStack = (event) => {
+const removeCardFromPlayer = (event) => {
+    htmlFoundCard = []
+    for (let i = 0; i < event.path.length - 4; i++) {
+        if (event.path[i].className.includes("card select card")) {
+            htmlFoundCard.push(event.path[i])
+        } else {
+            null
+        }
+    }
+    copyCardInfo(htmlFoundCard[0], tableStackArr)
+    console.log(tableStackArr);
+    let collectedInfo = loopThroughHandArr(userHandArr)
+    removedCardFromPlayerArr(userHandArr, showDiscardedCardIndex(htmlFoundCard, collectedInfo))
+    console.log(userHandArr);
 
 }
+
+const showDiscardedCardIndex = (collectedInfo, playerArr) => {
+    for (let i = 0; i < playerArr.length; i++) {
+        if (playerArr[i].includes(collectedInfo[0].attributes[0].value && collectedInfo[0].attributes[2].value)) {
+            let foundIndex = (i);
+            return(foundIndex);
+        } else {
+            null;
+        }
+    }
+
+}
+
+
+
+
 const copyCardInfo = (htmlElement, receivingElement) => {
     let copiedInfo = htmlElement.innerHTML
     receivingElement.innerHTML = copiedInfo
     return receivingElement
 }
-const clearCardInfo = (card) => {
-    const cardInfoReset = ``
-    card.innerHTML = cardInfoReset
+
+const removedCardFromPlayerArr = (playerArr, objFrom) => {
+    playerArr = playerArr.splice(objFrom, 1)
+    return playerArr;
 }
+
+const compareCardValues = (valueOne, valueTwo) => {
+    let highest = 0
+    valueOne > valueTwo ? highest = valueOne : highest = valueTwo
+    return highest;
+}
+
+
+
+// ------------- Adding to burn deck
+const cardToBurnFromStack = (event) => {
+}
+
+
 
 
 // ------------ event listeners
 giveCard.addEventListener("click", makePlayerHand)
-goToBurn.addEventListener('click', cardToBurnFromStack)
-userDiv.addEventListener('click', (event) => {
-    console.log(event);
-})
+userDiv.addEventListener('click', removeCardFromPlayer)
