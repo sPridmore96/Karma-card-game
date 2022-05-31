@@ -107,7 +107,6 @@ const createCardInfo = (givenObj) => {
 
 // wrapper function -------------------
 const removeCardFromPlayer = (event) => {
-    console.log(userHandArr);
     htmlFoundCard = [];
     for (let i = 0; i < event.path.length - 4; i++) {
         if (event.path[i].className.includes("card select card")) {
@@ -126,29 +125,23 @@ const removeCardFromPlayer = (event) => {
         createStackHTML(removedCardObj, tableStackElement)
         htmlFoundCard[0].remove();
     } else {
+
         copyCardInfoToCheck(CopyRemovedCardObj);
-        console.log(userHandArr);
 
         const playerCard = collectPlayerCardToCompare()
         const tableCard = collectTableCardToCompare()
-        compareCardRules(playerCard, tableCard)
-        const magicAnswer = isCardMagic()
-        if (magicAnswer === true) {
+        if (isCardMagic(playerCard)) {
             let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardInfo)
             cardToTableStackArr(removedCardObj)
             createStackHTML(removedCardObj, tableStackElement)
             htmlFoundCard[0].remove();
             return
         } else {
-
-            const AnswerToBePlayed = compareCardValues(playerCard, tableCard);
-
-            if (AnswerToBePlayed === true) {
+            if (compareCardValues(playerCard, tableCard)) {
                 let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardInfo)
                 cardToTableStackArr(removedCardObj)
                 createStackHTML(removedCardObj, tableStackElement)
                 htmlFoundCard[0].remove();
-                console.log(userHandArr);
             }
         }
     }
@@ -214,8 +207,6 @@ const createStackHTML = (array, htmlElement) => {
 
 }
 
-// ------------- add to burn deck
-
 
 // -------------- card rules 
 
@@ -224,59 +215,68 @@ const collectPlayerCardToCompare = () => {
     copiedCardInfoCheckCards = []
     return playerCard
 }
+
 const collectTableCardToCompare = () => {
     const tableCard = tableStackArr[tableStackArr.length - 1];
     return tableCard
 }
 
+const isCardMagic = (card) => {
+    return rules.includes(card.rule) ? true : false;
+}
 
 const compareCardValues = (valueOne, valueTwo) => {
     return valueOne.value >= valueTwo.value ? true : false;
 };
 
 const rules = 'reset, invisible, go lower than, miss ago, burn'
-const currentCardRule = []
+const currentCardRules = []
 
-const collectRule = (playerCard, tableCard) => {
+
+const collectRule = (tableCard) => {
 
     const ArrOfRules = rules.split(",")
     ArrOfRules.filter(rule => {
         if (rule.includes(playerCard.rule)) {
-            currentCardRule.push(rule)
+            currentCardRules.push(rule)
         }
     })
-    console.log(currentCardRule.join(""));
+    console.log(currentCardRules.join);
 }
 
-const isCardMagic = () => {
-    return rules.includes(currentCardRule) ? true : false;
-}
 
-const rulesActions = (cardPlayed) => {
 
+const rulesActions = (cardPlayed, stackCard) => {
+
+    const isStackCardMagic = (stackCard) => {
+        if (isCardMagic(stackCard)) {
+            switch (currentCardRules) {
+
+                case "reset":
+
+                case "invisible":
+
+                case "nothing":
+
+                case "go lower than":
+                    return valueTwo.value >= valueOne.value ? true : false;
+                case "miss ago":
+
+                case "burn":
+            }
+        } else {
+            
+        }
+    }
 
     const compareCardValues = (valueOne, valueTwo) => {
         return valueOne.value >= valueTwo.value ? true : false;
     };
-
-    switch (currentCardRule) {
-
-        case "reset":
-
-        case "invisible":
-
-        case "nothing":
-
-        case "go lower than":
-            return valueTwo.value >= valueOne.value ? true : false;
-        case "miss ago":
-
-        case "burn":
-
-    }
 }
 
 
+
+// ------------- add to burn deck
 
 
 // ------------ event listeners
