@@ -246,6 +246,7 @@ const collectRule = (tableCard) => {
 
 
 
+
 const rulesActions = (cardPlayed, stackCard) => {
 
     const isStackCardMagic = (stackCard) => {
