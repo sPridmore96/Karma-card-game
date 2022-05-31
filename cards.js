@@ -3,25 +3,25 @@ const fullDeckObj = [
         value : 14,
         name : "A",
         suit : "heart",
-        rule : "highest"
+        rule : "nothing"
     },
     {
         value : 14,
         name : "A",
         suit : "diamond",
-        rule : "highest"
+        rule : "nothing"
     },
     {
         value : 14,
         name : "A",
         suit : "club",
-        rule : "highest"
+        rule : "nothing"
     },
     {
         value : 14,
         name : "A",
         suit : "spade",
-        rule : "highest"
+        rule : "nothing"
     },
     {
         value : 13,
@@ -242,25 +242,25 @@ const fullDeckObj = [
         value : 4,
         name : "4",
         suit : "heart",
-        rule : "lowest"
+        rule : "nothing"
     },
     {
         value : 4,
         name : "4",
         suit : "diamond",
-        rule : "lowest"
+        rule : "nothing"
     },
     {
         value : 4,
         name : "4",
         suit : "club",
-        rule : "lowest"
+        rule : "nothing"
     },
     {
         value : 4,
         name : "4",
         suit : "spade",
-        rule : "lowest"
+        rule : "nothing"
     },
     {
         value : 3,
