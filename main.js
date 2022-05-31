@@ -10,12 +10,14 @@ let removedDeckCardObj = {};
 let htmlFoundCard = [];
 let copiedCardInfoCheckCards = [];
 let cardsToCompare = [];
-
-
+let tableCard = {}
+let playerCard = {}
+let discardedCardIndex = 0
 
 // ---------- DOM selectors
 const userDiv = document.querySelector(".user");
 const usersHandHTML = document.querySelector(".user__hand");
+const table = document.querySelector(".table")
 const tableDeck = document.querySelector(".table__deck");
 const tableStackElement = document.querySelector(".table__stack");
 const tableBurn = document.querySelector(".table__burn");
@@ -116,29 +118,32 @@ const removeCardFromPlayer = (event) => {
         }
     }
     let collectedInfo = loopThroughHandArr(userHandArr);
-    let discardedCardInfo = showDiscardedCardIndex(htmlFoundCard, collectedInfo);
-    let CopyRemovedCardObj = removeCopyCardFromPlayerArr(userHandArr, discardedCardInfo);
+    discardedCardIndex = showDiscardedCardIndex(htmlFoundCard, collectedInfo);
+    let CopyRemovedCardObj = removeCopyCardFromPlayerArr(userHandArr, discardedCardIndex);
 
     if (tableStackArr.length === 0) {
-        let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardInfo)
+        let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
         cardToTableStackArr(removedCardObj)
         createStackHTML(removedCardObj, tableStackElement)
         htmlFoundCard[0].remove();
     } else {
-
         copyCardInfoToCheck(CopyRemovedCardObj);
-
         const playerCard = collectPlayerCardToCompare()
         const tableCard = collectTableCardToCompare()
+
+        if (isCardMagic(tableCard)) {
+            ifStackCardIsMagic(tableCard, playerCard)
+            return
+        }
         if (isCardMagic(playerCard)) {
-            let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardInfo)
+            let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
             cardToTableStackArr(removedCardObj)
             createStackHTML(removedCardObj, tableStackElement)
             htmlFoundCard[0].remove();
             return
         } else {
             if (compareCardValues(playerCard, tableCard)) {
-                let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardInfo)
+                let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
                 cardToTableStackArr(removedCardObj)
                 createStackHTML(removedCardObj, tableStackElement)
                 htmlFoundCard[0].remove();
@@ -147,6 +152,26 @@ const removeCardFromPlayer = (event) => {
     }
 };
 // ------------------------------------
+
+// const checkRules = (tableCard, playerCard) => {
+//     if (isCardMagic(tableCard)) {
+//         return ifStackCardIsMagic(tableCard)
+//     }
+//     if (isCardMagic(playerCard)) {
+//         let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
+//         cardToTableStackArr(removedCardObj)
+//         createStackHTML(removedCardObj, tableStackElement)
+//         htmlFoundCard[0].remove();
+//         return
+//     } else {
+//         if (compareCardValues(playerCard, tableCard)) {
+//             let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
+//             cardToTableStackArr(removedCardObj)
+//             createStackHTML(removedCardObj, tableStackElement)
+//             htmlFoundCard[0].remove();
+//         }
+//     }
+// }
 
 const loopThroughHandArr = (playerHandArr) => {
     let collectedInfo = [];
@@ -229,51 +254,59 @@ const compareCardValues = (valueOne, valueTwo) => {
     return valueOne.value >= valueTwo.value ? true : false;
 };
 
-const rules = 'reset, invisible, go lower than, miss ago, burn'
-const currentCardRules = []
+const rules = 'reset,invisible,go lower than,miss ago,burn'
+let currentStackRule = []
 
 
-const collectRule = (tableCard) => {
+const collectRule = (stackCard) => {
 
     const ArrOfRules = rules.split(",")
     ArrOfRules.filter(rule => {
-        if (rule.includes(playerCard.rule)) {
-            currentCardRules.push(rule)
+        if (rule.includes(stackCard.rule)) {
+            currentStackRule.push(rule)
         }
     })
-    console.log(currentCardRules.join);
+    return currentStackRule
 }
 
+const compareLowerThanCardValues = (tableCard, playerCard) => {
+    console.log(playerCard.value, tableCard.value);
+    return playerCard.value <= tableCard.value ? true : false;
+};
 
 
 
-const rulesActions = (cardPlayed, stackCard) => {
-
-    const isStackCardMagic = (stackCard) => {
-        if (isCardMagic(stackCard)) {
-            switch (currentCardRules) {
-
-                case "reset":
-
-                case "invisible":
-
-                case "nothing":
-
-                case "go lower than":
-                    return valueTwo.value >= valueOne.value ? true : false;
-                case "miss ago":
-
-                case "burn":
+const ifStackCardIsMagic = (topStackCard, cardPlayed) => {
+    let stackRule = collectRule(topStackCard);
+    switch (stackRule[0]) {
+        case "reset":
+            console.log("reset");
+            break
+        case "invisible":
+            console.log("invisible");
+            break
+        case "go lower than":
+            const answer = compareLowerThanCardValues(topStackCard, cardPlayed) 
+            console.log(answer);
+            if (answer === true) {
+                let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
+                cardToTableStackArr(removedCardObj)
+                createStackHTML(removedCardObj, tableStackElement)
+                htmlFoundCard[0].remove();
+                console.log("go lower than");
             }
-        } else {
-            
-        }
+            break
+        case "miss ago":
+            console.log("miss ago");
+            break
+        case "burn":
+            console.log("burn");
+            break
     }
-
-    const compareCardValues = (valueOne, valueTwo) => {
-        return valueOne.value >= valueTwo.value ? true : false;
-    };
+    currentStackRule = []
 }
+
+
 
 
 
