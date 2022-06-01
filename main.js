@@ -3,6 +3,7 @@ import fullDeckObj from "./cards.js";
 
 //------------ global Vars
 let shuffledDeckArr = [];
+let shuffledDeckArrTwo = []
 let tableStackArr = [];
 let userHandArr = [];
 let opponentHandArr = [];
@@ -16,15 +17,19 @@ let burnArray = []
 let tableCard = {}
 let playerCard = {}
 
+
 // ---------- DOM selectors
 const userDiv = document.querySelector(".user");
+const opponentsDiv = document.querySelector(".opponent")
 const usersHandHTML = document.querySelector(".user__hand");
+const opponentHandHTML = document.querySelector("#opponent__hand")
 const table = document.querySelector(".table")
 const tableDeck = document.querySelector(".table__deck");
 const tableStackElement = document.querySelector(".table__stack");
 const tableBurn = document.querySelector(".table__burn");
 const cantGoButton = document.querySelector("#cant-go")
 // --------- start of game
+
 const shuffle = (array) => {
     let currentIndex = array.length,
         randomIndex;
@@ -40,6 +45,7 @@ const shuffle = (array) => {
 };
 
 const startGame = () => {
+    // shuffledDeckArrTwo = shuffle(fullDeckObj)
     shuffledDeckArr = shuffle(fullDeckObj);
     return shuffledDeckArr;
 };
@@ -56,14 +62,18 @@ const removeFromDeck = (deck) => {
 // --------------- moving cards to be used
 
 //wrapper functions --------------------------------
-const makePlayerHandFromDeck = (event) => {
+const makePlayerHandFromDeck = () => {
     if (userHandArr.length === 0) {
         createHand(userHandArr, 3);
+        createHand(opponentHandArr, 3)
+        makeHTMLForFirstHand(opponentHandArr, opponentHandHTML);
         makeHTMLForFirstHand(userHandArr, usersHandHTML);
     } else if (userHandArr.length != 0) {
         while (userHandArr < 3) {
             createHand(userHandArr, 1);
+            createHand(opponentHandArr, 1);
             makeHTMLForPlayingHand(userHandArr, usersHandHTML);
+            makeHTMLForPlayingHand(opponentHandArr, opponentHandHTML )
         }
     }
 };
@@ -128,9 +138,8 @@ const createCardInfo = (givenObj) => {
 makePlayerHandFromDeck()
 // wrapper function -------------------
 
-const removeCardFromPlayer = (event) => {
-
-
+const removeCardFromUser = (event) => {
+    
     htmlFoundCard = [];
     for (let i = 0; i < event.path.length - 4; i++) {
         if (event.path[i].className.includes("card select card")) {
@@ -140,6 +149,7 @@ const removeCardFromPlayer = (event) => {
         }
     }
     let collectedInfo = loopThroughHandArr(userHandArr);
+     collectedInfo = 
     discardedCardIndex = showDiscardedCardIndex(htmlFoundCard, collectedInfo);
     let CopyRemovedCardObj = removeCopyCardFromPlayerArr(userHandArr, discardedCardIndex);
 
@@ -151,7 +161,6 @@ const removeCardFromPlayer = (event) => {
         copyCardInfoToCheck(CopyRemovedCardObj);
         const playerCard = collectPlayerCardToCompare()
         const tableCard = collectTableCardToCompare()
-        console.log(playerCard, tableCard);
 
         if (isCardMagic(tableCard)) {
             ifStackCardIsMagic(tableCard, playerCard, userHandArr)
@@ -172,7 +181,50 @@ const removeCardFromPlayer = (event) => {
 };
 
 // ------------------------------------
+// other user wrapper function
+const removeCardFromUserTwo = (event) => {
+    
+    htmlFoundCard = [];
+    for (let i = 0; i < event.path.length - 4; i++) {
+        if (event.path[i].className.includes("card select card")) {
+            htmlFoundCard.push(event.path[i]);
+        } else {
+            null;
+        }
+    }
+    let collectedInfo = loopThroughHandArr(opponentHandArr);
+     collectedInfo = 
+    discardedCardIndex = showDiscardedCardIndex(htmlFoundCard, collectedInfo);
+    let CopyRemovedCardObj = removeCopyCardFromPlayerArr(opponentHandArr, discardedCardIndex);
 
+    if (tableStackArr.length === 0) {
+        removeCardFromPlayerAfterApproval(opponentHandArr)
+        ReplenishHand(opponentHandArr, opponentHandHTML)
+    } else {
+
+        copyCardInfoToCheck(CopyRemovedCardObj);
+        const playerCard = collectPlayerCardToCompare()
+        const tableCard = collectTableCardToCompare()
+
+        if (isCardMagic(tableCard)) {
+            ifStackCardIsMagic(tableCard, playerCard, opponentHandArr)
+            ReplenishHand(opponentHandArr, opponentHandHTML)
+            return
+        }
+        if (isCardMagic(playerCard)) {
+            removeCardFromPlayerAfterApproval(opponentHandArr)
+            ReplenishHand(opponentHandArr, opponentHandHTML)
+            return
+        } else {
+            if (compareCardValues(playerCard, tableCard)) {
+                removeCardFromPlayerAfterApproval(opponentHandArr)
+                ReplenishHand(opponentHandArr, opponentHandHTML)
+            }
+        }
+    }
+};
+
+//-----------------------------
 
 const loopThroughHandArr = (playerHandArr) => {
     let collectedInfo = [];
@@ -334,7 +386,6 @@ const cantGo = (event) => {
     makeHTMLForFirstHand(userHandArr, usersHandHTML)
 }
 
-
 const moveDeckArray = (arrayToo, htmlElement) => {
     arrayToo = tableStackArr;
     tableStackArr = []
@@ -343,5 +394,6 @@ const moveDeckArray = (arrayToo, htmlElement) => {
 }
 
 // ------------ event listeners
-userDiv.addEventListener("click", removeCardFromPlayer);
+userDiv.addEventListener("click", removeCardFromUser);
+opponentsDiv.addEventListener("click", removeCardFromUserTwo)
 cantGoButton.addEventListener("click", cantGo)
