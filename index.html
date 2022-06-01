@@ -29,20 +29,37 @@
 
     <div class="table">
         <div class="table__deck">
-            <ul class="deck"></ul>
+            <section class="card card--back" value="">
+                <div class="card__inner card__inner--centered">
+                    <div class="card__column">
+                        <div class="card__symbol"></div>
+                        <div class="card__symbol"></div>
+                    </div>
+                </div>
+            </section>
         </div>
 
         <div class="table__stack"></div>
-    </div>
 
-    <div class="table__burn"></div>
+
+        <div class="table__burn">
+            <section class="card card" value="">
+                <div class="card__inner card__inner--centered">
+                    <div class="card__column">
+                        <div class="card__symbol"></div>
+                        <div class="card__symbol"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
 
     <div class="user">
         <div class="user__hand"></div>
     </div>
-        <button id="compare">compare cards</button>
-        <button id="give-card">Give card</button>
-        <button id="remove">burn</button>
+    <button id="compare">compare cards</button>
+    <button id="give-card">Give card</button>
+    <button id="remove">burn</button>
     </div>
 </body>
 

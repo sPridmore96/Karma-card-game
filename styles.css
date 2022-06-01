@@ -118,6 +118,19 @@
   text-align: center;
 }
 
+.table {
+  flex-wrap: wrap;
+  background-color: red;
+  height: 25vh;
+  width: 75vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10rem;
+  padding: 0.5rem;
+  margin: 1rem 0 1rem 0;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -131,18 +144,6 @@ body {
   justify-content: center;
   align-items: center;
   padding: 1rem;
-}
-
-.table {
-  flex-wrap: wrap;
-  background-color: red;
-  height: 25vh;
-  width: 75vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10rem;
-  margin: 1rem 0 1rem 0;
 }
 
 .opponent {
