@@ -48,11 +48,11 @@ const startGame = () => {
 startGame();
 
 const removeFromDeck = (deck) => {
-    if(deck.length > 0){
-    return deck.pop();
-} else {
-    tableDeck.innerHTML = ``
-}
+    if (deck.length > 0) {
+        return deck.pop();
+    } else {
+        tableDeck.innerHTML = ``
+    }
 };
 
 // --------------- moving cards to be used
@@ -134,7 +134,7 @@ const removeCardFromPlayer = (event) => {
         const playerCard = collectPlayerCardToCompare()
         const tableCard = collectTableCardToCompare()
 
-        if (isCardMagic(tableCard))  {
+        if (isCardMagic(tableCard)) {
             ifStackCardIsMagic(tableCard, playerCard)
             return
         }
@@ -254,6 +254,7 @@ const compareLowerThanCardValues = (tableCard, playerCard) => {
 const removeCardFromPlayerAfterApproval = (playerHandArr) => {
     let removedCardObj = removeCardFromPlayerArr(playerHandArr, discardedCardIndex)
     cardToTableStackArr(removedCardObj)
+    console.log(tableStackArr);
     createStackHTML(removedCardObj, tableStackElement)
     htmlFoundCard[0].remove();
 }
@@ -261,18 +262,25 @@ const removeCardFromPlayerAfterApproval = (playerHandArr) => {
 const ifStackCardIsMagic = (topStackCard, cardPlayed) => {
 
     let stackRule = collectRule(topStackCard);
-    console.log(topStackCard);
     let answer = Boolean
+    let newCardValue = 0
     switch (stackRule[0]) {
         case "reset":
-          let newCardValue =  0; 
-          topStackCard.value = newCardValue
-           removeCardFromPlayerAfterApproval(userHandArr)
+            newCardValue = 0;
+            topStackCard.value = newCardValue
+            removeCardFromPlayerAfterApproval(userHandArr)
             break
         case "invisible":
-            
-        
-            console.log("invisible");
+            let newCardRule = tableStackArr[tableStackArr.length - 2].rule
+            newCardValue = tableStackArr[tableStackArr.length - 2].value
+            topStackCard.value = newCardValue
+            topStackCard.rule = newCardRule
+            console.log(topStackCard);
+            console.log(cardPlayed);
+            answer = compareCardValues(cardPlayed, topStackCard)
+            if (answer || isCardMagic(cardPlayed)) {
+                removeCardFromPlayerAfterApproval(userHandArr)
+            }
             break
         case "go lower than":
             answer = compareLowerThanCardValues(topStackCard, cardPlayed)
@@ -285,7 +293,7 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed) => {
             console.log("miss ago");
             break
         case "burn":
-                moveDeckArray()
+            moveDeckArray()
             break
     }
     currentStackRule = []
@@ -295,8 +303,7 @@ tableStackArr
 
 // ------------- add to burn deck
 const moveDeckArray = () => {
-    const burnArray = tableStackArr
-    console.log(tableStackArr);
+    const burnArray = tableStackArr;
     tableStackArr = []
     tableStackElement.innerHTML = ``
     createStackHTML(burnArray, tableBurn)
