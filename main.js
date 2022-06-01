@@ -80,9 +80,6 @@ const createHand = (playerHandArr, amountOfCards) => {
 
 
 const ReplenishHand = (playerArr, playerHTML) => {
-    if (shuffledDeckArr.length = 0) {
-        null
-    } else {
         if (playerArr.length < 3) {
             do {
                 createHand(playerArr, 1);
@@ -94,7 +91,6 @@ const ReplenishHand = (playerArr, playerHTML) => {
         }
     }
 
-}
 
 // -----------------------------------------------
 
@@ -131,9 +127,6 @@ const createCardInfo = (givenObj) => {
 
 makePlayerHandFromDeck()
 // wrapper function -------------------
-
-
-
 
 const removeCardFromPlayer = (event) => {
 
