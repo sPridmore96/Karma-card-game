@@ -150,8 +150,15 @@ body {
   background-color: grey;
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 100%;
   width: 90vw;
-  height: 20vh;
+}
+.opponent__hand {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .user {

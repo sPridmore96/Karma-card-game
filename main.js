@@ -22,12 +22,13 @@ let playerCard = {}
 const userDiv = document.querySelector(".user");
 const opponentsDiv = document.querySelector(".opponent")
 const usersHandHTML = document.querySelector(".user__hand");
-const opponentHandHTML = document.querySelector("#opponent__hand")
+const opponentHandHTML = document.querySelector(".opponent__hand")
 const table = document.querySelector(".table")
 const tableDeck = document.querySelector(".table__deck");
 const tableStackElement = document.querySelector(".table__stack");
 const tableBurn = document.querySelector(".table__burn");
 const cantGoButton = document.querySelector("#cant-go")
+const cantGoButtonPTwo = document.querySelector("#cant-go-PTwo")
 // --------- start of game
 
 const shuffle = (array) => {
@@ -374,8 +375,22 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed, arrayFrom) => {
     currentStackRule = []
 }
 
+const cantGoPTwo = () => {
+    event = event.target;
+
+    opponentHandArr = opponentHandArr.concat(tableStackArr);
+    opponentHandArr.sort((a, b) => {
+        return a.value - b.value
+    })
+    tableStackArr = []
+    tableStackElement.innerHTML = ``
+    opponentHandHTML.innerHTML = ``
+    makeHTMLForFirstHand(opponentHandArr, opponentHandHTML)
+}
+
 const cantGo = (event) => {
     event = event.target;
+
     userHandArr = userHandArr.concat(tableStackArr);
     userHandArr.sort((a, b) => {
         return a.value - b.value
@@ -397,3 +412,4 @@ const moveDeckArray = (arrayToo, htmlElement) => {
 userDiv.addEventListener("click", removeCardFromUser);
 opponentsDiv.addEventListener("click", removeCardFromUserTwo)
 cantGoButton.addEventListener("click", cantGo)
+cantGoButtonPTwo.addEventListener("click", cantGoPTwo)
