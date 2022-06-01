@@ -1,50 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Card Game</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css" />
     <script defer type="module" src="./main.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="opponent">
-        <div id="opponent__hand"></div>
+      <div id="opponent__hand"></div>
     </div>
 
-
     <div class="table">
-        <div class="table__deck">
-            <section class="card card--hearts card--back" value="">
-                <div class="card__inner card__inner--centered">
-                    <div class="card__column">
-                        <div class="card__symbol"></div>
-                        <div class="card__symbol"></div>
-                    </div>
-                </div>
-            </section>
-        </div>
+      <div class="table__deck">
+        <section class="card card--hearts card--back" value="">
+          <div class="card__inner card__inner--centered">
+            <div class="card__column">
+              <div class="card__symbol"></div>
+              <div class="card__symbol"></div>
+            </div>
+          </div>
+        </section>
+      </div>
 
-        <div class="table__stack"></div>
+      <div class="table__stack"></div>
 
-
-        <div class="table__burn">
-            <section class="card card" value="">
-                <div class="card__inner card__inner--centered">
-                    <div class="card__column">
-                        <div class="card__symbol"></div>
-                        <div class="card__symbol"></div>
-                    </div>
-                </div>
-            </section>
-        </div>
+      <div class="table__burn">
+        <section class="card card" value="">
+          <div class="card__inner card__inner--centered">
+            <div class="card__column">
+              <div class="card__symbol"></div>
+              <div class="card__symbol"></div>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
 
     <div class="user">
-        <div class="user__hand"></div>
-</body>
-
+      <div class="user__hand"></div>
+    </div>
+    <div>
+        <br>
+        <br>
+      <button id="cant-go">Can't Go?</button>
+    </div>
+  </body>
 </html>
