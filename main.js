@@ -9,10 +9,9 @@ let opponentHandArr = [];
 let removedDeckCardObj = {};
 let htmlFoundCard = [];
 let copiedCardInfoCheckCards = [];
-let cardsToCompare = [];
-let tableCard = {}
-let playerCard = {}
 let discardedCardIndex = 0
+const rules = 'reset,invisible,go lower than,miss ago,burn'
+let currentStackRule = []
 
 // ---------- DOM selectors
 const userDiv = document.querySelector(".user");
@@ -21,10 +20,6 @@ const table = document.querySelector(".table")
 const tableDeck = document.querySelector(".table__deck");
 const tableStackElement = document.querySelector(".table__stack");
 const tableBurn = document.querySelector(".table__burn");
-const giveCard = document.querySelector("#give-card");
-const compareButton = document.querySelector("#compare");
-const goToBurn = document.querySelector("#burn-card");
-const remove = document.getElementById("remove");
 
 // --------- start of game
 const shuffle = (array) => {
@@ -63,8 +58,10 @@ const makePlayerHandFromDeck = (event) => {
         createHand(userHandArr, 3);
         makeHTMLForFirstHand(userHandArr, usersHandHTML);
     } else if (userHandArr.length != 0) {
-        createHand(userHandArr, 1);
-        makeHTMLForPlayingHand(userHandArr, usersHandHTML);
+        while (userHandArr < 3) {
+            createHand(userHandArr, 1);
+            makeHTMLForPlayingHand(userHandArr, usersHandHTML);
+        }
     }
 };
 
@@ -77,6 +74,19 @@ const createHand = (playerHandArr, amountOfCards) => {
         });
     }
 };
+
+
+const ReplenishHand = (playerArr, playerHTML) => {
+    if (playerArr.length < 3) {
+        do {
+            createHand(playerArr, 1);
+            makeHTMLForPlayingHand(playerArr, playerHTML);
+        }
+        while (playerArr.length < 3)
+    } else {
+        null
+    }
+}
 
 // -----------------------------------------------
 
@@ -111,6 +121,7 @@ const createCardInfo = (givenObj) => {
     return givenObj;
 };
 
+makePlayerHandFromDeck()
 // wrapper function -------------------
 
 const removeCardFromPlayer = (event) => {
@@ -128,6 +139,7 @@ const removeCardFromPlayer = (event) => {
 
     if (tableStackArr.length === 0) {
         removeCardFromPlayerAfterApproval(userHandArr)
+        ReplenishHand(userHandArr, usersHandHTML)
     } else {
 
         copyCardInfoToCheck(CopyRemovedCardObj);
@@ -136,18 +148,22 @@ const removeCardFromPlayer = (event) => {
 
         if (isCardMagic(tableCard)) {
             ifStackCardIsMagic(tableCard, playerCard)
+            ReplenishHand(userHandArr, usersHandHTML)
             return
         }
         if (isCardMagic(playerCard)) {
             removeCardFromPlayerAfterApproval(userHandArr)
+            ReplenishHand(userHandArr, usersHandHTML)
             return
         } else {
             if (compareCardValues(playerCard, tableCard)) {
                 removeCardFromPlayerAfterApproval(userHandArr)
+                ReplenishHand(userHandArr, usersHandHTML)
             }
         }
     }
 };
+
 // ------------------------------------
 
 
@@ -232,9 +248,6 @@ const compareCardValues = (valueOne, valueTwo) => {
     return valueOne.value >= valueTwo.value ? true : false;
 };
 
-const rules = 'reset,invisible,go lower than,miss ago,burn'
-let currentStackRule = []
-
 
 const collectRule = (stackCard) => {
 
@@ -260,7 +273,6 @@ const removeCardFromPlayerAfterApproval = (playerHandArr) => {
 }
 
 const ifStackCardIsMagic = (topStackCard, cardPlayed) => {
-
     let stackRule = collectRule(topStackCard);
     let answer = Boolean
     let newCardValue = 0
@@ -284,7 +296,6 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed) => {
             break
         case "go lower than":
             answer = compareLowerThanCardValues(topStackCard, cardPlayed)
-            console.log(answer);
             if (answer || isCardMagic(cardPlayed)) {
                 removeCardFromPlayerAfterApproval(userHandArr)
             }
@@ -299,7 +310,7 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed) => {
     currentStackRule = []
 }
 
-tableStackArr
+
 
 // ------------- add to burn deck
 const moveDeckArray = () => {
@@ -310,5 +321,4 @@ const moveDeckArray = () => {
 }
 
 // ------------ event listeners
-giveCard.addEventListener("click", makePlayerHandFromDeck);
 userDiv.addEventListener("click", removeCardFromPlayer);
