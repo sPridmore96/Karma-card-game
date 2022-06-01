@@ -271,6 +271,7 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed) => {
             break
         case "invisible":
             
+
             console.log("invisible");
             break
         case "go lower than":
