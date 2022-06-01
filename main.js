@@ -48,7 +48,11 @@ const startGame = () => {
 startGame();
 
 const removeFromDeck = (deck) => {
+    if(deck.length > 0){
     return deck.pop();
+} else {
+    tableDeck.innerHTML = ``
+}
 };
 
 // --------------- moving cards to be used
@@ -108,6 +112,7 @@ const createCardInfo = (givenObj) => {
 };
 
 // wrapper function -------------------
+
 const removeCardFromPlayer = (event) => {
     htmlFoundCard = [];
     for (let i = 0; i < event.path.length - 4; i++) {
@@ -122,56 +127,29 @@ const removeCardFromPlayer = (event) => {
     let CopyRemovedCardObj = removeCopyCardFromPlayerArr(userHandArr, discardedCardIndex);
 
     if (tableStackArr.length === 0) {
-        let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
-        cardToTableStackArr(removedCardObj)
-        createStackHTML(removedCardObj, tableStackElement)
-        htmlFoundCard[0].remove();
+        removeCardFromPlayerAfterApproval(userHandArr)
     } else {
+
         copyCardInfoToCheck(CopyRemovedCardObj);
         const playerCard = collectPlayerCardToCompare()
         const tableCard = collectTableCardToCompare()
 
-        if (isCardMagic(tableCard)) {
+        if (isCardMagic(tableCard))  {
             ifStackCardIsMagic(tableCard, playerCard)
             return
         }
         if (isCardMagic(playerCard)) {
-            let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
-            cardToTableStackArr(removedCardObj)
-            createStackHTML(removedCardObj, tableStackElement)
-            htmlFoundCard[0].remove();
+            removeCardFromPlayerAfterApproval(userHandArr)
             return
         } else {
             if (compareCardValues(playerCard, tableCard)) {
-                let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
-                cardToTableStackArr(removedCardObj)
-                createStackHTML(removedCardObj, tableStackElement)
-                htmlFoundCard[0].remove();
+                removeCardFromPlayerAfterApproval(userHandArr)
             }
         }
     }
 };
 // ------------------------------------
 
-// const checkRules = (tableCard, playerCard) => {
-//     if (isCardMagic(tableCard)) {
-//         return ifStackCardIsMagic(tableCard)
-//     }
-//     if (isCardMagic(playerCard)) {
-//         let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
-//         cardToTableStackArr(removedCardObj)
-//         createStackHTML(removedCardObj, tableStackElement)
-//         htmlFoundCard[0].remove();
-//         return
-//     } else {
-//         if (compareCardValues(playerCard, tableCard)) {
-//             let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
-//             cardToTableStackArr(removedCardObj)
-//             createStackHTML(removedCardObj, tableStackElement)
-//             htmlFoundCard[0].remove();
-//         }
-//     }
-// }
 
 const loopThroughHandArr = (playerHandArr) => {
     let collectedInfo = [];
@@ -270,48 +248,58 @@ const collectRule = (stackCard) => {
 }
 
 const compareLowerThanCardValues = (tableCard, playerCard) => {
-    console.log(playerCard.value, tableCard.value);
     return playerCard.value <= tableCard.value ? true : false;
 };
 
-
+const removeCardFromPlayerAfterApproval = (playerHandArr) => {
+    let removedCardObj = removeCardFromPlayerArr(playerHandArr, discardedCardIndex)
+    cardToTableStackArr(removedCardObj)
+    createStackHTML(removedCardObj, tableStackElement)
+    htmlFoundCard[0].remove();
+}
 
 const ifStackCardIsMagic = (topStackCard, cardPlayed) => {
+
     let stackRule = collectRule(topStackCard);
+    console.log(topStackCard);
+    let answer = Boolean
     switch (stackRule[0]) {
         case "reset":
-            console.log("reset");
+          let newCardValue =  0; 
+          topStackCard.value = newCardValue
+           removeCardFromPlayerAfterApproval(userHandArr)
             break
         case "invisible":
+            
             console.log("invisible");
             break
         case "go lower than":
-            const answer = compareLowerThanCardValues(topStackCard, cardPlayed) 
+            answer = compareLowerThanCardValues(topStackCard, cardPlayed)
             console.log(answer);
-            if (answer === true) {
-                let removedCardObj = removeCardFromPlayerArr(userHandArr, discardedCardIndex)
-                cardToTableStackArr(removedCardObj)
-                createStackHTML(removedCardObj, tableStackElement)
-                htmlFoundCard[0].remove();
-                console.log("go lower than");
+            if (answer || isCardMagic(cardPlayed)) {
+                removeCardFromPlayerAfterApproval(userHandArr)
             }
             break
         case "miss ago":
             console.log("miss ago");
             break
         case "burn":
-            console.log("burn");
+                moveDeckArray()
             break
     }
     currentStackRule = []
 }
 
-
-
-
+tableStackArr
 
 // ------------- add to burn deck
-
+const moveDeckArray = () => {
+    const burnArray = tableStackArr
+    console.log(tableStackArr);
+    tableStackArr = []
+    tableStackElement.innerHTML = ``
+    createStackHTML(burnArray, tableBurn)
+}
 
 // ------------ event listeners
 giveCard.addEventListener("click", makePlayerHandFromDeck);
