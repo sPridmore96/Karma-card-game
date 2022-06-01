@@ -12,6 +12,9 @@ let copiedCardInfoCheckCards = [];
 let discardedCardIndex = 0
 const rules = 'reset,invisible,go lower than,miss ago,burn'
 let currentStackRule = []
+let burnArray = []
+let tableCard = {}
+let playerCard = {}
 
 // ---------- DOM selectors
 const userDiv = document.querySelector(".user");
@@ -20,7 +23,7 @@ const table = document.querySelector(".table")
 const tableDeck = document.querySelector(".table__deck");
 const tableStackElement = document.querySelector(".table__stack");
 const tableBurn = document.querySelector(".table__burn");
-
+const cantGoButton = document.querySelector("#cant-go")
 // --------- start of game
 const shuffle = (array) => {
     let currentIndex = array.length,
@@ -77,15 +80,20 @@ const createHand = (playerHandArr, amountOfCards) => {
 
 
 const ReplenishHand = (playerArr, playerHTML) => {
-    if (playerArr.length < 3) {
-        do {
-            createHand(playerArr, 1);
-            makeHTMLForPlayingHand(playerArr, playerHTML);
-        }
-        while (playerArr.length < 3)
-    } else {
+    if (shuffledDeckArr.length = 0) {
         null
+    } else {
+        if (playerArr.length < 3) {
+            do {
+                createHand(playerArr, 1);
+                makeHTMLForPlayingHand(playerArr, playerHTML);
+            }
+            while (playerArr.length < 3)
+        } else {
+            null
+        }
     }
+
 }
 
 // -----------------------------------------------
@@ -124,7 +132,12 @@ const createCardInfo = (givenObj) => {
 makePlayerHandFromDeck()
 // wrapper function -------------------
 
+
+
+
 const removeCardFromPlayer = (event) => {
+
+
     htmlFoundCard = [];
     for (let i = 0; i < event.path.length - 4; i++) {
         if (event.path[i].className.includes("card select card")) {
@@ -145,9 +158,10 @@ const removeCardFromPlayer = (event) => {
         copyCardInfoToCheck(CopyRemovedCardObj);
         const playerCard = collectPlayerCardToCompare()
         const tableCard = collectTableCardToCompare()
+        console.log(playerCard, tableCard);
 
         if (isCardMagic(tableCard)) {
-            ifStackCardIsMagic(tableCard, playerCard)
+            ifStackCardIsMagic(tableCard, playerCard, userHandArr)
             ReplenishHand(userHandArr, usersHandHTML)
             return
         }
@@ -250,7 +264,6 @@ const compareCardValues = (valueOne, valueTwo) => {
 
 
 const collectRule = (stackCard) => {
-
     const ArrOfRules = rules.split(",")
     ArrOfRules.filter(rule => {
         if (rule.includes(stackCard.rule)) {
@@ -267,12 +280,11 @@ const compareLowerThanCardValues = (tableCard, playerCard) => {
 const removeCardFromPlayerAfterApproval = (playerHandArr) => {
     let removedCardObj = removeCardFromPlayerArr(playerHandArr, discardedCardIndex)
     cardToTableStackArr(removedCardObj)
-    console.log(tableStackArr);
     createStackHTML(removedCardObj, tableStackElement)
     htmlFoundCard[0].remove();
 }
 
-const ifStackCardIsMagic = (topStackCard, cardPlayed) => {
+const ifStackCardIsMagic = (topStackCard, cardPlayed, arrayFrom) => {
     let stackRule = collectRule(topStackCard);
     let answer = Boolean
     let newCardValue = 0
@@ -280,45 +292,67 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed) => {
         case "reset":
             newCardValue = 0;
             topStackCard.value = newCardValue
-            removeCardFromPlayerAfterApproval(userHandArr)
+            removeCardFromPlayerAfterApproval(arrayFrom)
             break
         case "invisible":
             let newCardRule = tableStackArr[tableStackArr.length - 2].rule
             newCardValue = tableStackArr[tableStackArr.length - 2].value
             topStackCard.value = newCardValue
             topStackCard.rule = newCardRule
-            console.log(topStackCard);
-            console.log(cardPlayed);
-            answer = compareCardValues(cardPlayed, topStackCard)
-            if (answer || isCardMagic(cardPlayed)) {
-                removeCardFromPlayerAfterApproval(userHandArr)
+            // stackRule = collectRule(topStackCard)
+            // console.log(stackRule);
+            if (topStackCard.rule != "invisible" || "nothing") {
+                stackRule[0] = topStackCard.rule
+                ifStackCardIsMagic(tableCard, playerCard, userHandArr)
+            } else if (topStackCard.rule === "invisible") {
+                removeCardFromPlayerAfterApproval(arrayFrom)
             }
+
             break
         case "go lower than":
             answer = compareLowerThanCardValues(topStackCard, cardPlayed)
             if (answer || isCardMagic(cardPlayed)) {
-                removeCardFromPlayerAfterApproval(userHandArr)
+                removeCardFromPlayerAfterApproval(arrayFrom)
             }
             break
         case "miss ago":
-            console.log("miss ago");
+            newCardValue = 0;
+            topStackCard.value = newCardValue
+            removeCardFromPlayerAfterApproval(arrayFrom)
             break
         case "burn":
-            moveDeckArray()
+            moveDeckArray(burnArray, tableBurn)
             break
+        case "nothing":
+            answer = compareCardValues(topStackCard, playerCard)
+            if (answer) {
+                removeCardFromPlayerAfterApproval(arrayFrom)
+            }
+
     }
     currentStackRule = []
 }
 
-
-
-// ------------- add to burn deck
-const moveDeckArray = () => {
-    const burnArray = tableStackArr;
+const cantGo = (event) => {
+    event = event.target;
+    userHandArr = userHandArr.concat(tableStackArr);
+    userHandArr.sort((a, b) => {
+        return a.value - b.value
+    })
     tableStackArr = []
     tableStackElement.innerHTML = ``
-    createStackHTML(burnArray, tableBurn)
+    usersHandHTML.innerHTML = ``
+    makeHTMLForFirstHand(userHandArr, usersHandHTML)
+}
+
+
+const moveDeckArray = (arrayToo, htmlElement) => {
+    arrayToo = tableStackArr;
+    tableStackArr = []
+    tableStackElement.innerHTML = ``
+    createStackHTML(arrayToo, htmlElement)
 }
 
 // ------------ event listeners
 userDiv.addEventListener("click", removeCardFromPlayer);
+cantGoButton.addEventListener("click", cantGo)
