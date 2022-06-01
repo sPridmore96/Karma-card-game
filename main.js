@@ -299,15 +299,12 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed, arrayFrom) => {
             newCardValue = tableStackArr[tableStackArr.length - 2].value
             topStackCard.value = newCardValue
             topStackCard.rule = newCardRule
-            // stackRule = collectRule(topStackCard)
-            // console.log(stackRule);
             if (topStackCard.rule != "invisible" || "nothing") {
                 stackRule[0] = topStackCard.rule
                 ifStackCardIsMagic(tableCard, playerCard, userHandArr)
             } else if (topStackCard.rule === "invisible") {
                 removeCardFromPlayerAfterApproval(arrayFrom)
             }
-
             break
         case "go lower than":
             answer = compareLowerThanCardValues(topStackCard, cardPlayed)
@@ -328,7 +325,6 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed, arrayFrom) => {
             if (answer) {
                 removeCardFromPlayerAfterApproval(arrayFrom)
             }
-
     }
     currentStackRule = []
 }
