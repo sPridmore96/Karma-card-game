@@ -160,6 +160,7 @@ const removeCardFromUser = (event) => {
         }
 
         let collectedInfo = loopThroughHandArr(userHandArr);
+        console.log(collectedInfo);
         discardedCardIndex = showDiscardedCardIndex(htmlFoundCard, collectedInfo);
         let CopyRemovedCardObj = removeCopyCardFromPlayerArr(userHandArr, discardedCardIndex);
 
@@ -200,44 +201,6 @@ const removeCardFromUser = (event) => {
 // ------------------------------------
 // other user wrapper function
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const shuffle = (array) => {
-//     let currentIndex = array.length,
-//         randomIndex;
-//     while (currentIndex != 0) {
-//         randomIndex = Math.floor(Math.random() * currentIndex);
-//         currentIndex--;
-//         [array[currentIndex], array[randomIndex]] = [
-//             array[randomIndex],
-//             array[currentIndex],
-//         ];
-//     }
-//     return array;
-// };
-
-// if (userPlayed === false) {
-//     htmlFoundCard = [];
-//     for (let i = 0; i < event.path.length - 4; i++) {
-//         if (event.path[i].className.includes("card select card")) {
-//             htmlFoundCard.push(event.path[i]);
-//         } else {
-//             null;
-//         }
-//     }
-
 const getRandomInt = (max) => {
     return Math.floor(Math.random() * max);
 }
@@ -246,19 +209,20 @@ const getIndexToPlay = (array) => {
     return randomIndex = getRandomInt(length);
 }
 
-const getHTMLFromIndex = (index, array) => {
-    return (array[index]);
-}
 
 
 
 const removeCardFromUserTwo = (event) => {
 
     if (userPlayed === true) {
-        let randomIndex = getIndexToPlay(opponentHandArr)
-        let collectedInfo = getHTMLFromIndex(randomIndex, opponentHandArr)
+        randomIndex = getIndexToPlay(opponentHandArr)
 
-        discardedCardIndex = showDiscardedCardIndex(htmlFoundCard, collectedInfo);
+        htmlFoundCard = [];
+
+         htmlFoundCard.push(opponentHandHTML.childNodes[randomIndex]);
+
+
+        discardedCardIndex = randomIndex
         let CopyRemovedCardObj = removeCopyCardFromPlayerArr(opponentHandArr, discardedCardIndex);
 
         if (tableStackArr.length === 0) {
