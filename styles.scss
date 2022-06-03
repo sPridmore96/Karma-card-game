@@ -22,8 +22,9 @@ body{
     justify-content: center;
     align-items: center;
     height: 100%;
-    width: 90vw;
+    width: 100%;
     &__hand {
+        width: 100%;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -37,8 +38,9 @@ body{
     justify-content: center;
     align-items: center;
     height: 100%;
-    width: 90vw;
+    width: 100%;
     &__hand {
+        width: 100%;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
