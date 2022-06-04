@@ -114,9 +114,9 @@
 
 .table {
   flex-wrap: wrap;
-  background-color: red;
+  background-color: rgba(10, 105, 10, 0.788);
   height: 100%;
-  width: 75vw;
+  width: 90vw;
   display: flex;
   align-items: center;
   justify-content: space-between;
