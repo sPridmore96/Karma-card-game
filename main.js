@@ -105,14 +105,18 @@ const createHand = (playerHandArr, amountOfCards) => {
 
 
 const ReplenishHand = (playerArr, playerHTML) => {
-    if (playerArr.length < 3) {
-        do {
-            createHand(playerArr, 1);
-            makeHTMLForPlayingHand(playerArr, playerHTML);
-        }
-        while (playerArr.length < 3)
+    if (shuffledDeckArr === 0) {
+        return null
     } else {
-        null
+        if (playerArr.length < 3) {
+            do {
+                createHand(playerArr, 1);
+                makeHTMLForPlayingHand(playerArr, playerHTML);
+            }
+            while (playerArr.length < 3)
+        } else {
+            null
+        }
     }
 }
 
@@ -203,7 +207,7 @@ const removeCardFromUser = (event) => {
             }
         }
         resetValues(tableStackArr, userHandArr)
-        console.log(tableStackArr);
+
         let collectedInfo = loopThroughHandArr(userHandArr);
         discardedCardIndex = showDiscardedCardIndex(htmlFoundCard, collectedInfo);
         let CopyRemovedCardObj = removeCopyCardFromPlayerArr(userHandArr, discardedCardIndex);
@@ -264,8 +268,8 @@ const removeCardFromUser = (event) => {
 // opponent wrapper function
 
 const removeCardFromUserTwo = (turn) => {
+
     resetValues(tableStackArr, opponentHandArr)
-    console.log(tableStackArr);
     let whileCount = 0
     if (turn === true) {
         do {
@@ -403,6 +407,7 @@ const collectTableCardToCompare = () => {
 }
 
 const isCardMagic = (card) => {
+    // console.log(card.rule);
     return rules.includes(card.rule) ? true : false;
 }
 
@@ -517,6 +522,7 @@ const cantGo = (event) => {
 
 const moveDeckArray = (arrayToo, htmlElement) => {
     arrayToo = tableStackArr;
+    arrayToo.reverse()
     tableStackArr = []
     tableStackElement.innerHTML = ``
     createStackHTML(arrayToo, htmlElement)
@@ -527,5 +533,3 @@ const moveDeckArray = (arrayToo, htmlElement) => {
 userDiv.addEventListener("click", removeCardFromUser);
 opponentsDiv.addEventListener("click", removeCardFromUserTwo)
 cantGoButton.addEventListener("click", cantGo)
-cantGoButtonPTwo.addEventListener("click", cantGoPTwo)
-chose.addEventListener("click", removeCardFromUserTwo)
