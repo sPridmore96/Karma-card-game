@@ -126,15 +126,6 @@
 	.card--club &:before {
 		content: "\2663";
 	}
-	
-	
-	&--big {
-		flex-basis: 0.25 * $card-height;
-	}
-	
-	&--huge {
-		flex-basis: 0.45 * $card-height;
-	}
 }
 
 .title {

@@ -105,12 +105,6 @@
 .card--club .card__symbol:before {
   content: "♣";
 }
-.card__symbol--big {
-  flex-basis: 2rem;
-}
-.card__symbol--huge {
-  flex-basis: 3.6rem;
-}
 
 .title {
   font: 18px "Trebuchet MS";
