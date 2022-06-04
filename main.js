@@ -26,7 +26,6 @@ const userDiv = document.querySelector(".user");
 const opponentsDiv = document.querySelector(".opponent")
 const usersHandHTML = document.querySelector(".user__hand");
 const opponentHandHTML = document.querySelector(".opponent__hand")
-const table = document.querySelector(".table")
 const tableDeck = document.querySelector(".table__deck");
 const tableStackElement = document.querySelector(".table__stack");
 const tableBurn = document.querySelector(".table__burn");
@@ -72,6 +71,8 @@ const removeFromDeck = (deck) => {
         tableDeck.innerHTML = ``
     }
 };
+
+
 
 // --------------- moving cards to be used
 
@@ -152,6 +153,41 @@ const createCardInfo = (givenObj) => {
 makePlayerHandFromDeck()
 
 
+const resetValues = (array, playerHandArr) => {
+    for (let i = 2; i < array.length; i++) {
+        if (array[i].name.includes("3")) {
+            array[i].value = 3
+            array[i].rule = "invisible"
+        } else if (array[i].name.includes("8")) {
+            array[i].value = 8
+        } else if (array[i].name.includes("2")) {
+            array[i].value = 2
+        } else {
+            null
+        }
+    }
+    playerHandArr.forEach(card => {
+        if (card.name.includes("3")) {
+            card.value = 3
+            card.rule = "invisible"
+        } else if (card.name.includes("8")) {
+            card.value = 8
+        } else if (card.name.includes("2")) {
+            card.value = 2
+        } else {
+            null
+        }
+    });
+}
+
+const getRandomInt = (max) => {
+    return Math.floor(Math.random() * max);
+}
+const getIndexToPlay = (array) => {
+    let length = array.length
+    return randomIndex = getRandomInt(length);
+}
+
 
 // wrapper function -------------------
 
@@ -166,7 +202,8 @@ const removeCardFromUser = (event) => {
                 null;
             }
         }
-
+        resetValues(tableStackArr, userHandArr)
+        console.log(tableStackArr);
         let collectedInfo = loopThroughHandArr(userHandArr);
         discardedCardIndex = showDiscardedCardIndex(htmlFoundCard, collectedInfo);
         let CopyRemovedCardObj = removeCopyCardFromPlayerArr(userHandArr, discardedCardIndex);
@@ -175,77 +212,67 @@ const removeCardFromUser = (event) => {
             removeCardFromPlayerAfterApproval(userHandArr)
             ReplenishHand(userHandArr, usersHandHTML)
             userPlayed = true
+            setTimeout(() => { removeCardFromUserTwo(userPlayed) }, 2000)
         } else {
             copyCardInfoToCheck(CopyRemovedCardObj);
             const playerCard = collectPlayerCardToCompare()
             const tableCard = collectTableCardToCompare()
-
-
             if (isCardMagic(playerCard)) {
                 removeCardFromPlayerAfterApproval(userHandArr)
                 ReplenishHand(userHandArr, usersHandHTML)
+
                 if (playerCard.value === 8 || playerCard.value === 10) {
                     userPlayed = false
+                    setTimeout(() => { removeCardFromUserTwo(userPlayed) }, 2000)
+                    return
                 } else {
                     userPlayed = true
+                    setTimeout(() => { removeCardFromUserTwo(userPlayed) }, 2000)
                 }
                 showPlayerTurn()
-                setTimeout(() => {removeCardFromUserTwo(userPlayed)},3000)
+                setTimeout(() => { removeCardFromUserTwo(userPlayed) }, 2000)
                 return
             } else if (isCardMagic(tableCard)) {
                 ifStackCardIsMagic(tableCard, playerCard, userHandArr)
-                ReplenishHand(userHandArr, usersHandHTML)
-                userPlayed = true
-                showPlayerTurn()
-                setTimeout(() => {removeCardFromUserTwo(userPlayed)},3000)
-                return
-
+                if (answer === true) {
+                    ReplenishHand(userHandArr, usersHandHTML)
+                    userPlayed = true
+                    showPlayerTurn()
+                    setTimeout(() => { removeCardFromUserTwo(userPlayed) }, 2000)
+                    return
+                } else {
+                    userPlayed === false
+                    return null
+                }
             } else if (compareCardValues(playerCard, tableCard)) {
                 removeCardFromPlayerAfterApproval(userHandArr)
                 ReplenishHand(userHandArr, usersHandHTML)
                 userPlayed = true
                 showPlayerTurn()
-                setTimeout(() => {removeCardFromUserTwo(userPlayed)},3000)
+                setTimeout(() => { removeCardFromUserTwo(userPlayed) }, 2000)
                 return
             } else {
-                null
+                userPlayed = false
             }
         }
     } else {
-        setTimeout(() => {removeCardFromUserTwo(userPlayed)},3000)
+        setTimeout(() => { removeCardFromUserTwo(userPlayed) }, 2000)
     }
-    showPlayerTurn()
 }
 
 // ------------------------------------
 // opponent wrapper function
 
-const getRandomInt = (max) => {
-    return Math.floor(Math.random() * max);
-}
-const getIndexToPlay = (array) => {
-    let length = array.length
-    console.log(getRandomInt(length))
-    return randomIndex = getRandomInt(length);
-}
-
-
-
 const removeCardFromUserTwo = (turn) => {
+    resetValues(tableStackArr, opponentHandArr)
+    console.log(tableStackArr);
     let whileCount = 0
     if (turn === true) {
         do {
             if (userPlayed === true) {
-
-
                 randomIndex = getIndexToPlay(opponentHandArr)
-
                 htmlFoundCard = [];
-
                 htmlFoundCard.push(opponentHandHTML.childNodes[randomIndex]);
-
-
-
                 discardedCardIndex = randomIndex
                 let CopyRemovedCardObj = removeCopyCardFromPlayerArr(opponentHandArr, discardedCardIndex);
 
@@ -253,25 +280,22 @@ const removeCardFromUserTwo = (turn) => {
                     removeCardFromPlayerAfterApproval(opponentHandArr)
                     ReplenishHand(opponentHandArr, opponentHandHTML)
                     userPlayed = false
-
                 } else {
-
                     copyCardInfoToCheck(CopyRemovedCardObj);
                     const playerCard = collectPlayerCardToCompare()
                     const tableCard = collectTableCardToCompare()
-
                     if (isCardMagic(playerCard)) {
                         removeCardFromPlayerAfterApproval(opponentHandArr)
                         ReplenishHand(opponentHandArr, opponentHandHTML)
+
                         if (playerCard.value === 8 || playerCard.value === 10) {
                             userPlayed = true
-                            setTimeout(() => {removeCardFromUserTwo(userPlayed)},3000)
+                            setTimeout(() => { removeCardFromUserTwo(userPlayed) }, 2000)
+                            return
                         } else {
                             userPlayed = false
                         }
-                        showPlayerTurn()
-                        return
-
+                        return showPlayerTurn()
                     } else if (isCardMagic(tableCard)) {
                         ifStackCardIsMagic(tableCard, playerCard, opponentHandArr)
                         if (answer === true) {
@@ -279,8 +303,9 @@ const removeCardFromUserTwo = (turn) => {
                             userPlayed = false
                             showPlayerTurn()
                             return
-                        } else { 
-                            userPlayed = true 
+                        } else {
+                            userPlayed === false
+                            removeCardFromUserTwo()
                         }
                     } else if (compareCardValues(playerCard, tableCard)) {
                         removeCardFromPlayerAfterApproval(opponentHandArr)
@@ -289,13 +314,12 @@ const removeCardFromUserTwo = (turn) => {
                         showPlayerTurn()
                         return
                     } else {
-                        userPlayed = true 
+                        userPlayed = true
                     }
                 }
             } whileCount++
-            if (whileCount === 100) {
-                cantGoPTwo()
-                return
+            if (whileCount === 4000) {
+                return cantGoPTwo()
             }
         } while (userPlayed === true)
         showPlayerTurn()
@@ -352,7 +376,7 @@ const removeCopyCardFromPlayerArr = (playerArr, index) => {
 // ------------- Adding to table deck
 const cardToTableStackArr = (array) => {
     array.forEach(obj => {
-        tableStackArr.push(obj);
+        tableStackArr.unshift(obj);
     })
     return tableStackArr
 };
@@ -374,7 +398,7 @@ const collectPlayerCardToCompare = () => {
 }
 
 const collectTableCardToCompare = () => {
-    const tableCard = tableStackArr[tableStackArr.length - 1];
+    const tableCard = tableStackArr[0];
     return tableCard
 }
 
@@ -391,7 +415,7 @@ const collectRule = (stackCard) => {
     const ArrOfRules = rules.split(",")
     ArrOfRules.filter(rule => {
         if (rule.includes(stackCard.rule)) {
-            currentStackRule.push(rule)
+            currentStackRule.unshift(rule)
         }
     })
     return currentStackRule
@@ -416,23 +440,28 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed, arrayFrom) => {
             newCardValue = 0;
             topStackCard.value = newCardValue
             removeCardFromPlayerAfterApproval(arrayFrom)
-            break
+            answer = true
+            return
         case "invisible":
-            let newCardRule = tableStackArr[tableStackArr.length - 2].rule
-            newCardValue = tableStackArr[tableStackArr.length - 2].value
+            let newCardRule = tableStackArr[1].rule
+            newCardValue = tableStackArr[1].value
             topStackCard.value = newCardValue
             topStackCard.rule = newCardRule
-            if (topStackCard.rule != "invisible" && topStackCard.rule != "nothing") {
-                stackRule[0] = topStackCard.rule
-                ifStackCardIsMagic(tableCard, playerCard, userHandArr)
-                answer = true
+            if (topStackCard.rule === "nothing") {
+                answer = compareCardValues(topStackCard, playerCard)
+                if (answer === true) {
+                    removeCardFromPlayerAfterApproval(arrayFrom)
+                    return
+                } else {
+                    return null
+                }
+            } else if (topStackCard.rule != "nothing") {
+                ifStackCardIsMagic(topStackCard, cardPlayed, arrayFrom)
                 break
-            } else if (topStackCard.rule === "invisible") {
-                removeCardFromPlayerAfterApproval(arrayFrom)
-                answer = true
-                break
+            } else {
+                return null
             }
-            break
+
         case "go lower than":
             answer = compareLowerThanCardValues(topStackCard, cardPlayed)
             if (answer || isCardMagic(cardPlayed)) {
@@ -460,7 +489,6 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed, arrayFrom) => {
 }
 
 const cantGoPTwo = () => {
-    // event = event.target;
     opponentHandArr = opponentHandArr.concat(tableStackArr);
     opponentHandArr.sort((a, b) => {
         return a.value - b.value
@@ -470,7 +498,7 @@ const cantGoPTwo = () => {
     opponentHandHTML.innerHTML = ``
     makeHTMLForFirstHand(opponentHandArr, opponentHandHTML)
     userPlayed = true
-    setTimeout(() => {removeCardFromUserTwo(userPlayed)},3000)
+    setTimeout(() => { removeCardFromUserTwo(userPlayed) }, 2000)
 }
 
 const cantGo = (event) => {
