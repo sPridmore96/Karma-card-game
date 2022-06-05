@@ -19,7 +19,7 @@ let tableCard = {}
 let playerCard = {}
 let userPlayed = false
 let answer = Boolean
-
+let message = ``
 
 // ---------- DOM selectors
 const userDiv = document.querySelector(".user");
@@ -33,6 +33,9 @@ const cantGoButton = document.querySelector("#cant-go");
 const cantGoButtonPTwo = document.querySelector("#cant-go-PTwo");
 const chose = document.querySelector("#chose");
 const showTurn = document.querySelector("#playerTurn")
+const startAgain = document.querySelector("#start-again")
+console.log(startAgain);
+console.log(cantGoButton);
 
 // --------- start of game
 
@@ -62,15 +65,34 @@ const startGame = () => {
     shuffledDeckArr = shuffle(fullDeckObj);
     return shuffledDeckArr;
 };
-startGame();
 
 const removeFromDeck = (deck) => {
     if (deck.length > 0) {
         return deck.pop();
     } else {
-        tableDeck.innerHTML = ``
+        tableDeck.innerHTML = `<p>Deck <br> Finished</p>`
+        return 
     }
 };
+
+const declareWinner = (playerArr, otherPlayerArr) => {
+
+    if (playerArr.length === 0) {
+        message = `<h1>Winner!!!</h1> <br> <p>Play Again?</p>`
+        let gameFinished = true
+        return showTurn.innerHTML = message
+    } else if (otherPlayerArr.length === 0) {
+        gameFinished = true
+        message = `<h1>Unlucky, Play Again?</h1>`
+        return showTurn.innerHTML = message
+    } else {
+        return
+    }
+}
+startGame()
+const reStartGame = (event) => {
+    location.reload()
+}
 
 
 
@@ -78,35 +100,49 @@ const removeFromDeck = (deck) => {
 
 //wrapper functions --------------------------------
 const makePlayerHandFromDeck = () => {
-    if (userHandArr.length === 0) {
-        createHand(userHandArr, 3);
-        createHand(opponentHandArr, 3)
-        makeHTMLForFirstHand(opponentHandArr, opponentHandHTML);
-        makeHTMLForFirstHand(userHandArr, usersHandHTML);
-    } else if (userHandArr.length != 0) {
-        while (userHandArr < 3) {
-            createHand(userHandArr, 1);
-            createHand(opponentHandArr, 1);
-            makeHTMLForPlayingHand(userHandArr, usersHandHTML);
-            makeHTMLForPlayingHand(opponentHandArr, opponentHandHTML)
+    if (shuffledDeckArr.length === 0) {
+        return
+    } else {
+        if (userHandArr.length === 0) {
+            createHand(userHandArr, 3);
+            createHand(opponentHandArr, 3)
+            makeHTMLForFirstHand(opponentHandArr, opponentHandHTML);
+            makeHTMLForFirstHand(userHandArr, usersHandHTML);
+        } else if (userHandArr.length != 0) {
+            while (userHandArr < 3) {
+                createHand(userHandArr, 1);
+                createHand(opponentHandArr, 1);
+                makeHTMLForPlayingHand(userHandArr, usersHandHTML);
+                makeHTMLForPlayingHand(opponentHandArr, opponentHandHTML)
+            }
         }
     }
 };
 
 const createHand = (playerHandArr, amountOfCards) => {
-    for (let i = 0; i < amountOfCards; i++) {
-        removedDeckCardObj = removeFromDeck(shuffledDeckArr);
-        addCardToArr(playerHandArr, removedDeckCardObj);
-        playerHandArr.forEach((obj) => {
-            obj = createCardInfo(obj);
-        });
+    if (playerHandArr === opponentHandArr) {
+        for (let i = 0; i < amountOfCards; i++) {
+            removedDeckCardObj = removeFromDeck(shuffledDeckArr);
+            addCardToArr(playerHandArr, removedDeckCardObj);
+            playerHandArr.forEach((obj) => {
+                // createHiddenCard(obj["card info"])
+                obj = createCardInfo(obj);
+            });
+        }
+    } else {
+        for (let i = 0; i < amountOfCards; i++) {
+            removedDeckCardObj = removeFromDeck(shuffledDeckArr);
+            addCardToArr(playerHandArr, removedDeckCardObj);
+            playerHandArr.forEach((obj) => {
+                obj = createCardInfo(obj);
+            });
+        }
     }
 };
 
-
 const ReplenishHand = (playerArr, playerHTML) => {
-    if (shuffledDeckArr === 0) {
-        return null
+    if (shuffledDeckArr.length === 0) {
+        return 
     } else {
         if (playerArr.length < 3) {
             do {
@@ -137,6 +173,7 @@ const makeHTMLForPlayingHand = (playerHandArr, htmlElement) => {
 };
 const makeHTMLForFirstHand = (playerHandArr, htmlElement) => {
     playerHandArr.forEach((cardObj) => {
+        console.log();
         htmlElement.innerHTML += cardObj["card info"];
     });
 };
@@ -196,7 +233,9 @@ const getIndexToPlay = (array) => {
 // wrapper function -------------------
 
 const removeCardFromUser = (event) => {
-
+    console.log(tableStackArr);
+console.log(shuffledDeckArr.length);
+declareWinner(userHandArr,opponentHandArr)
     if (userPlayed === false) {
         htmlFoundCard = [];
         for (let i = 0; i < event.path.length - 4; i++) {
@@ -268,7 +307,9 @@ const removeCardFromUser = (event) => {
 // opponent wrapper function
 
 const removeCardFromUserTwo = (turn) => {
-
+    console.log(shuffledDeckArr.length);
+    console.log(tableStackArr);
+  declareWinner(userHandArr,opponentHandArr)
     resetValues(tableStackArr, opponentHandArr)
     let whileCount = 0
     if (turn === true) {
@@ -494,6 +535,7 @@ const ifStackCardIsMagic = (topStackCard, cardPlayed, arrayFrom) => {
 }
 
 const cantGoPTwo = () => {
+    resetValues(tableStackArr, opponentHandArr)
     opponentHandArr = opponentHandArr.concat(tableStackArr);
     opponentHandArr.sort((a, b) => {
         return a.value - b.value
@@ -508,7 +550,7 @@ const cantGoPTwo = () => {
 
 const cantGo = (event) => {
     event = event.target;
-
+    resetValues(tableStackArr, userHandArr)
     userHandArr = userHandArr.concat(tableStackArr);
     userHandArr.sort((a, b) => {
         return a.value - b.value
@@ -529,7 +571,8 @@ const moveDeckArray = (arrayToo, htmlElement) => {
 }
 
 
+
 // ------------ event listeners
+startAgain.addEventListener("click", reStartGame)
 userDiv.addEventListener("click", removeCardFromUser);
-opponentsDiv.addEventListener("click", removeCardFromUserTwo)
 cantGoButton.addEventListener("click", cantGo)
