@@ -71,7 +71,7 @@ const removeFromDeck = (deck) => {
         return deck.pop();
     } else {
         tableDeck.innerHTML = `<p>Deck <br> Finished</p>`
-        return 
+        return
     }
 };
 
@@ -82,7 +82,7 @@ const declareWinner = (playerArr, otherPlayerArr) => {
         let gameFinished = true
         return showTurn.innerHTML = message
     } else if (otherPlayerArr.length === 0) {
-        gameFinished = true
+        let gameFinished = true
         message = `<h1>Unlucky, Play Again?</h1>`
         return showTurn.innerHTML = message
     } else {
@@ -125,8 +125,8 @@ const createHand = (playerHandArr, amountOfCards) => {
             removedDeckCardObj = removeFromDeck(shuffledDeckArr);
             addCardToArr(playerHandArr, removedDeckCardObj);
             playerHandArr.forEach((obj) => {
-                // createHiddenCard(obj["card info"])
                 obj = createCardInfo(obj);
+                obj = createCardInfoForOpponent(obj)
             });
         }
     } else {
@@ -142,7 +142,7 @@ const createHand = (playerHandArr, amountOfCards) => {
 
 const ReplenishHand = (playerArr, playerHTML) => {
     if (shuffledDeckArr.length === 0) {
-        return 
+        return
     } else {
         if (playerArr.length < 3) {
             do {
@@ -165,18 +165,33 @@ const addCardToArr = (playerArr, givenCard) => {
 };
 
 const makeHTMLForPlayingHand = (playerHandArr, htmlElement) => {
-    let newHTML = [];
-    playerHandArr.forEach((cardObj) => {
-        newHTML = cardObj["card info"];
-    });
-    return (htmlElement.innerHTML += newHTML);
+    if (playerHandArr === userHandArr) {
+        let newHTML = [];
+        playerHandArr.forEach((cardObj) => {
+            newHTML = cardObj["card info"];
+        });
+        return (htmlElement.innerHTML += newHTML);
+    } else {
+        let newHTML = [];
+        playerHandArr.forEach((cardObj) => {
+            newHTML = cardObj["opponent card"];
+        });
+        return (htmlElement.innerHTML += newHTML);
+    }
 };
 const makeHTMLForFirstHand = (playerHandArr, htmlElement) => {
-    playerHandArr.forEach((cardObj) => {
-        console.log();
-        htmlElement.innerHTML += cardObj["card info"];
-    });
-};
+    if (playerHandArr === userHandArr) {
+        playerHandArr.forEach((cardObj) => {
+            console.log();
+            htmlElement.innerHTML += cardObj["card info"];
+        });
+    } else {
+        playerHandArr.forEach((cardObj) => {
+            console.log();
+            htmlElement.innerHTML += cardObj["opponent card"];
+        })
+    };
+}
 
 const createCardInfo = (givenObj) => {
     let cardInfo = `<section class="card select card--${givenObj.suit}" name="${givenObj.name}" value = ${givenObj.value}>
@@ -190,6 +205,20 @@ const createCardInfo = (givenObj) => {
     givenObj["card info"] = cardInfo;
     return givenObj;
 };
+
+const createCardInfoForOpponent = (givenObj) => {
+    let opponentCard = `<section class="card select card--back">
+            <div class="card__inner card__inner--centered">
+                <div class="card__column">
+                    <div class="card__symbol"></div>
+                    <div class="card__symbol"></div>
+                </div>
+            </div>
+        </section>`;
+    givenObj["opponent card"] = opponentCard;
+    return givenObj;
+}
+
 
 makePlayerHandFromDeck()
 
@@ -234,8 +263,8 @@ const getIndexToPlay = (array) => {
 
 const removeCardFromUser = (event) => {
     console.log(tableStackArr);
-console.log(shuffledDeckArr.length);
-declareWinner(userHandArr,opponentHandArr)
+    console.log(shuffledDeckArr.length);
+    declareWinner(userHandArr, opponentHandArr)
     if (userPlayed === false) {
         htmlFoundCard = [];
         for (let i = 0; i < event.path.length - 4; i++) {
@@ -307,9 +336,7 @@ declareWinner(userHandArr,opponentHandArr)
 // opponent wrapper function
 
 const removeCardFromUserTwo = (turn) => {
-    console.log(shuffledDeckArr.length);
-    console.log(tableStackArr);
-  declareWinner(userHandArr,opponentHandArr)
+    declareWinner(userHandArr, opponentHandArr)
     resetValues(tableStackArr, opponentHandArr)
     let whileCount = 0
     if (turn === true) {
@@ -317,7 +344,10 @@ const removeCardFromUserTwo = (turn) => {
             if (userPlayed === true) {
                 randomIndex = getIndexToPlay(opponentHandArr)
                 htmlFoundCard = [];
+                console.log(opponentHandHTML.childNodes);
+                console.log(tableStackArr);
                 htmlFoundCard.push(opponentHandHTML.childNodes[randomIndex]);
+                
                 discardedCardIndex = randomIndex
                 let CopyRemovedCardObj = removeCopyCardFromPlayerArr(opponentHandArr, discardedCardIndex);
 
