@@ -7,7 +7,7 @@ Majority of the time the aim is the play a higher card than the one played befor
 
 there is exceptions. these are called magic cards. 
 
-excluding exceptions 4 is the lowest and Ace is the highest.
+excluding exceptions 4 is the lowest and Ace is the highest card.
 
 Magic cards can be played at any point regardless of what was played before.
 
