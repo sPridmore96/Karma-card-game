@@ -26,4 +26,4 @@ the Value and any rule applied to the card underneath it.
 stack so anything can be played following it.
 
 10 - Burn, the number 10 card when played removes the stack on the table and puts it to a burn pile. This new burn pile is now
-considered out of the game and the cards will not be played with again that game.
+considered out of the game and the cards will not be played with again in that game.
