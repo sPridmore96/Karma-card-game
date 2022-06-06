@@ -17,7 +17,7 @@ MAGIC CARDS --- :
 
 2 -Reset,  Resets the table deck and allows the following player to play any card
 
-3 - Invisible, invisible is like the card hasn’t been played. the player take a turn to play it and the card copies
+3 - Invisible, invisible is almost like the card hasn’t been played. the player takes a turn to play it and the card copies
 the Value and any rule applied to the card underneath it.
 
 7 - Lower Than, The cluse in the name, this is the only card that when played the following person has to play lower than a 7
