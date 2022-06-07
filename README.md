@@ -20,7 +20,7 @@ MAGIC CARDS --- :
 3 - Invisible, invisible is almost like the card hasn’t been played. the player takes a turn to play it and the card copies
 the Value and any rule applied to the card underneath it.
 
-7 - Lower Than, The cluse in the name, this is the only card that when played the following person has to play lower than a 7
+7 - Lower Than, The clues in the name, this is the only card that when played the following person has to play lower than a 7
 
 8- Miss ago, when played the following person must miss ago. this is also like a 2 in the respect it resets the table Value
 stack so anything can be played following it.
