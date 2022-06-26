@@ -3,7 +3,6 @@ import fullDeckObj from "./cards.js";
 
 //------------ global Vars
 let shuffledDeckArr = [];
-let shuffledDeckArrTwo = []
 let tableStackArr = [];
 let userHandArr = [];
 let opponentHandArr = [];
@@ -23,19 +22,14 @@ let message = ``
 
 // ---------- DOM selectors
 const userDiv = document.querySelector(".user");
-const opponentsDiv = document.querySelector(".opponent")
 const usersHandHTML = document.querySelector(".user__hand");
 const opponentHandHTML = document.querySelector(".opponent__hand")
 const tableDeck = document.querySelector(".table__deck");
 const tableStackElement = document.querySelector(".table__stack");
 const tableBurn = document.querySelector(".table__burn");
 const cantGoButton = document.querySelector("#cant-go");
-const cantGoButtonPTwo = document.querySelector("#cant-go-PTwo");
-const chose = document.querySelector("#chose");
 const showTurn = document.querySelector("#playerTurn")
 const startAgain = document.querySelector("#start-again")
-console.log(startAgain);
-console.log(cantGoButton);
 
 // --------- start of game
 
@@ -53,10 +47,7 @@ const shuffle = (array) => {
     while (currentIndex != 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex--;
-        [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex],
-            array[currentIndex],
-        ];
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex],array[currentIndex]];
     }
     return array;
 };
@@ -65,7 +56,7 @@ const startGame = () => {
     shuffledDeckArr = shuffle(fullDeckObj);
     return shuffledDeckArr;
 };
-
+startGame()
 const removeFromDeck = (deck) => {
     if (deck.length > 0) {
         return deck.pop();
@@ -80,20 +71,19 @@ const declareWinner = (playerArr, otherPlayerArr) => {
     if (playerArr.length === 0) {
         message = `<h1>Winner!!!</h1> <br> <p>Play Again?</p>`
         let gameFinished = true
-        return showTurn.innerHTML = message
+        return showTurn.innerHTML = message, gameFinished
     } else if (otherPlayerArr.length === 0) {
         let gameFinished = true
         message = `<h1>Unlucky, Play Again?</h1>`
-        return showTurn.innerHTML = message
+        return showTurn.innerHTML = message, gameFinished
     } else {
         return
     }
 }
-startGame()
+
 const reStartGame = (event) => {
     location.reload()
 }
-
 
 
 // --------------- moving cards to be used
@@ -120,25 +110,15 @@ const makePlayerHandFromDeck = () => {
 };
 
 const createHand = (playerHandArr, amountOfCards) => {
-    if (playerHandArr === opponentHandArr) {
+    
         for (let i = 0; i < amountOfCards; i++) {
             removedDeckCardObj = removeFromDeck(shuffledDeckArr);
             addCardToArr(playerHandArr, removedDeckCardObj);
             playerHandArr.forEach((obj) => {
                 obj = createCardInfo(obj);
-                obj = createCardInfoForOpponent(obj)
-            });
-        }
-    } else {
-        for (let i = 0; i < amountOfCards; i++) {
-            removedDeckCardObj = removeFromDeck(shuffledDeckArr);
-            addCardToArr(playerHandArr, removedDeckCardObj);
-            playerHandArr.forEach((obj) => {
-                obj = createCardInfo(obj);
-            });
-        }
-    }
-};
+                obj = createCardInfoForOpponent(obj)})
+
+}};
 
 const ReplenishHand = (playerArr, playerHTML) => {
     if (shuffledDeckArr.length === 0) {
@@ -182,19 +162,18 @@ const makeHTMLForPlayingHand = (playerHandArr, htmlElement) => {
 const makeHTMLForFirstHand = (playerHandArr, htmlElement) => {
     if (playerHandArr === userHandArr) {
         playerHandArr.forEach((cardObj) => {
-            console.log();
             htmlElement.innerHTML += cardObj["card info"];
         });
     } else {
         playerHandArr.forEach((cardObj) => {
-            console.log();
             htmlElement.innerHTML += cardObj["opponent card"];
         })
     };
 }
 
 const createCardInfo = (givenObj) => {
-    let cardInfo = `<section class="card select card--${givenObj.suit}" name="${givenObj.name}" value = ${givenObj.value}>
+    let cardInfo =
+     `<section class="card select card--${givenObj.suit}" name="${givenObj.name}" value = ${givenObj.value}>
             <div class="card__inner card__inner--centered">
                 <div class="card__column">
                     <div class="card__symbol"></div>
@@ -263,8 +242,9 @@ const getIndexToPlay = (array) => {
 
 const removeCardFromUser = (event) => {
     console.log(tableStackArr);
-    console.log(shuffledDeckArr.length);
+    
     declareWinner(userHandArr, opponentHandArr)
+
     if (userPlayed === false) {
         htmlFoundCard = [];
         for (let i = 0; i < event.path.length - 4; i++) {
@@ -344,7 +324,6 @@ const removeCardFromUserTwo = (turn) => {
             if (userPlayed === true) {
                 randomIndex = getIndexToPlay(opponentHandArr)
                 htmlFoundCard = [];
-                console.log(opponentHandHTML.childNodes);
                 console.log(tableStackArr);
                 htmlFoundCard.push(opponentHandHTML.childNodes[randomIndex]);
                 
@@ -402,6 +381,7 @@ const removeCardFromUserTwo = (turn) => {
         null
     }
 }
+
 //-----------------------------
 
 const loopThroughHandArr = (playerHandArr) => {
@@ -447,8 +427,6 @@ const removeCopyCardFromPlayerArr = (playerArr, index) => {
     return copyPlayArr, copyRemovedObj;
 };
 
-
-// ------------- Adding to table deck
 const cardToTableStackArr = (array) => {
     array.forEach(obj => {
         tableStackArr.unshift(obj);
@@ -478,7 +456,6 @@ const collectTableCardToCompare = () => {
 }
 
 const isCardMagic = (card) => {
-    // console.log(card.rule);
     return rules.includes(card.rule) ? true : false;
 }
 
