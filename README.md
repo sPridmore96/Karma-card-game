@@ -1,6 +1,6 @@
-# version-of-card-game
+# Karma-card-game
 
-This is a version of a card game called Sh*t Head. 
+This is a version of a card game called Karma. 
 From playing this game with different people the rules always vary so here are the rules for this game...
 
 Majority of the time the aim is the play a higher card than the one played before you. 
