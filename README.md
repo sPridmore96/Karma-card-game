@@ -1,4 +1,4 @@
-# version-of-cardGame
+# version-of-card-game
 
 This is a version of a card game called Sh*t Head. 
 From playing this game with different people the rules always vary so here are the rules for this game...
